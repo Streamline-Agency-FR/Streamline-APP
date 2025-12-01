@@ -1,0 +1,22 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.streamline.dashboard
+productName: Streamline Dashboard
+win:
+  icon: build/streamline_logo.ico
+  target:
+    - nsis
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Streamline Dashboard
+publish:
+  - provider: github
+    owner: Streamline-Agency-FR
+    repo: Streamline-APP
+    private: false
+files: []
+electronVersion: 31.7.7

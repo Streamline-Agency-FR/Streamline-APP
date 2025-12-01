@@ -8,7 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build output
-dist/
+dist/win-unpacked/
 out/
 release/
 
@@ -17,7 +17,6 @@ release/
 *.msi
 *.dmg
 *.AppImage
-latest.yml
 
 # OS files
 .DS_Store
