@@ -2,36 +2,266 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Streamline Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargement - Streamline Dashboard</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            background-color: #1a1a1a;
+            background: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* Grille subtile en fond */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 230, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 230, 0, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridSlide 20s linear infinite;
+        }
+
+        @keyframes gridSlide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Lueur jaune subtile */
+        .glow-bg {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 230, 0, 0.15) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        /* Container principal */
+        .loader-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* Logo container avec effet de halo */
+        .logo-container {
+            position: relative;
+            margin-bottom: 60px;
+            display: inline-block;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 230, 0, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: halo 3s ease-in-out infinite;
+        }
+
+        @keyframes halo {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
         img {
-            width: 200px;
+            width: 180px;
             height: auto;
-            margin-bottom: 20px;
-            animation: spin 2s linear infinite;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 20px rgba(255, 230, 0, 0.4));
+            animation: float 3s ease-in-out infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-        h2 {
-            font-weight: normal;
+
+        /* Texte moderne */
+        .loading-text {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        /* Barre de progression moderne */
+        .progress-wrapper {
+            position: relative;
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: visible;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffe600 0%, #ffed4e 100%);
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
+        }
+
+        /* Point lumineux qui suit la barre */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ffe600;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 230, 0, 0.8), 0 0 30px rgba(255, 230, 0, 0.4);
+        }
+
+        /* Pourcentage stylisé */
+        .percentage-display {
+            margin-top: 25px;
+            font-size: 48px;
+            font-weight: 200;
+            color: #ffe600;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(255, 230, 0, 0.5);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .percentage-display .percent-sign {
+            font-size: 24px;
+            opacity: 0.6;
+            margin-left: 4px;
+        }
+
+        /* Lignes décoratives */
+        .decorative-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .line {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(255, 230, 0, 0.1), transparent);
+            animation: lineMove 8s linear infinite;
+        }
+
+        .line:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .line:nth-child(2) { left: 50%; animation-delay: 2s; }
+        .line:nth-child(3) { left: 80%; animation-delay: 4s; }
+
+        @keyframes lineMove {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .progress-wrapper {
+                width: 90%;
+            }
+            img {
+                width: 140px;
+            }
+            .percentage-display {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="build/streamline_logo.ico" alt="Streamline Logo">
-    <h2>Chargement...</h2>
+    <!-- Fond lumineux -->
+    <div class="glow-bg"></div>
+
+    <!-- Lignes décoratives -->
+    <div class="decorative-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="loader-wrapper">
+        <div class="logo-container">
+            <img src="build/streamline_logo.ico" alt="Streamline Logo">
+        </div>
+
+        <div class="loading-text">Initialisation</div>
+
+        <div class="progress-wrapper">
+            <div class="progress-bg">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="percentage-display">
+            <span id="percentage">0</span><span class="percent-sign">%</span>
+        </div>
+    </div>
+
+    <script>
+        let percent = 0;
+        const percentageElement = document.getElementById('percentage');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress() {
+            if (percent <= 100) {
+                percentageElement.textContent = Math.floor(percent);
+                progressBar.style.width = percent + '%';
+                percent += Math.random() * 1.5 + 0.5;
+                requestAnimationFrame(updateProgress);
+            } else {
+                percentageElement.textContent = '100';
+                progressBar.style.width = '100%';
+                // Redirection après chargement
+                // setTimeout(() => { window.location.href = 'votre-page.html'; }, 500);
+            }
+        }
+
+        updateProgress();
+    </script>
 </body>
 </html>
