@@ -1,0 +1,45 @@
+{
+  "name": "streamline-dashboard",
+  "version": "1.0.0",
+  "author": "StreamlineAgency.eu",
+  "description": "Client desktop pour Streamline Agency",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "publish": "electron-builder --publish always"
+  },
+  "build": {
+    "appId": "com.streamline.dashboard",
+    "productName": "Streamline Dashboard",
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "icon": "build/streamline_logo.ico",
+      "target": ["nsis"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Streamline Dashboard"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Streamline-Agency-FR",
+        "repo": "Streamline-APP",
+        "private": false
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}
