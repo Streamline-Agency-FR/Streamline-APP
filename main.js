@@ -7,31 +7,34 @@ function createWindow() {
         width: 1400,
         height: 900,
         autoHideMenuBar: true,
-        icon: path.join(__dirname, "icon.png"),
+        icon: path.join(__dirname, "build/streamline_logo.png"),
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true
         }
     });
 
-    // Ouvre automatiquement ton dashboard avec login intégré
-    win.loadURL("https://streamlineagency.eu/dashboard");
+    // 1️⃣ Affiche la page de splash
+    win.loadFile("splash.html");
+
+    // 2️⃣ Une fois la splash chargée
+    win.webContents.once('did-finish-load', () => {
+        // Vérifie les mises à jour
+        autoUpdater.checkForUpdatesAndNotify();
+
+        // Charge ensuite le dashboard après un léger délai pour éviter le blanc
+        setTimeout(() => {
+            win.loadURL("https://streamlineagency.eu/dashboard");
+        }, 1000); // délai 1 seconde
+    });
 
     // Empêche les fenêtres externes
-    win.webContents.setWindowOpenHandler(() => {
-        return { action: "deny" };
-    });
-
-    // Vérifie les mises à jour dès que la fenêtre est prête
-    win.once("ready-to-show", () => {
-        autoUpdater.checkForUpdatesAndNotify();
-    });
+    win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
 }
 
 // ======= AUTO-UPDATER =======
-autoUpdater.autoDownload = true; // Télécharge automatiquement
+autoUpdater.autoDownload = true;
 
-// Lorsqu'une mise à jour est disponible
 autoUpdater.on("update-available", () => {
     dialog.showMessageBox({
         type: "info",
@@ -41,7 +44,6 @@ autoUpdater.on("update-available", () => {
     });
 });
 
-// Lorsque la mise à jour est téléchargée
 autoUpdater.on("update-downloaded", () => {
     dialog.showMessageBox({
         type: "info",
@@ -49,21 +51,12 @@ autoUpdater.on("update-downloaded", () => {
         message: "La mise à jour est prête. Redémarrer pour installer ?",
         buttons: ["Oui", "Plus tard"]
     }).then(result => {
-        if (result.response === 0) {
-            autoUpdater.quitAndInstall();
-        }
+        if (result.response === 0) autoUpdater.quitAndInstall();
     });
 });
 
-// Si aucune mise à jour n’est trouvée
-autoUpdater.on("update-not-available", () => {
-    console.log("Aucune mise à jour disponible.");
-});
-
-// En cas d’erreur
-autoUpdater.on("error", (err) => {
-    console.error("Erreur lors de la mise à jour :", err);
-});
+autoUpdater.on("update-not-available", () => console.log("Aucune mise à jour disponible."));
+autoUpdater.on("error", err => console.error("Erreur lors de la mise à jour :", err));
 
 // ======= APP =======
 app.whenReady().then(createWindow);
